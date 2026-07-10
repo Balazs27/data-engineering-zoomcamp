@@ -22,6 +22,7 @@ RUN uv sync --locked
 # Copy ingestion scripts to the container
 COPY ingest_data_cli.py .
 COPY ingest_lookup_cli.py .
+COPY ingest_data_2021_cli.py .
 
 # Run Python through uv.
 # The actual script name will be provided in docker compose run.

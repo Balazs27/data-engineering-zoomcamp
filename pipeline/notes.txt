@@ -83,3 +83,17 @@ docker compose run --rm ingest ingest_lookup_cli.py \
   --pg-database ny_taxi \
   --target-table yellow_taxi_location_lookup \
   --csv-path /data/taxi_zone_lookup.csv
+
+docker compose run --rm ingest ingest_data_2021_cli.py \
+  --pg-user root \
+  --pg-password root \
+  --pg-host pgdatabase \
+  --pg-port 5432 \
+  --pg-database ny_taxi \
+  --target-table yellow_taxi_trips \
+  --start-year 2021 \
+  --start-month 1 \
+  --end-year 2021 \
+  --end-month 7 \
+  --chunksize 100000 \
+  --if-exists replace

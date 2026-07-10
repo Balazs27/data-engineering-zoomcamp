@@ -42,7 +42,7 @@ def run():
     year = 2021
     month = 1
 
-    target_table = 'yellow_taxi_data'
+    target_table = 'yellow_taxi_trips'
 
     chunksize = 100000
 

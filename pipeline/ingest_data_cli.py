@@ -38,7 +38,7 @@ parse_dates = [
 @click.option('--pg-host', default='localhost', show_default=True, help='PostgreSQL host')
 @click.option('--pg-port', default=5432, show_default=True, type=int, help='PostgreSQL port')
 @click.option('--pg-database', default='ny_taxi', show_default=True, help='PostgreSQL database name')
-@click.option('--target-table', default='yellow_taxi_data', show_default=True, help='Target table name')
+@click.option('--target-table', default='yellow_taxi_trips', show_default=True, help='Target table name')
 @click.option('--year', default=2021, show_default=True, type=int, help='Taxi data year')
 @click.option('--month', default=1, show_default=True, type=int, help='Taxi data month')
 @click.option('--chunksize', default=100000, show_default=True, type=int, help='Number of rows per chunk')
