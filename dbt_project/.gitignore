@@ -1,0 +1,20 @@
+# Default .gitignore content added by dbt Cloud# you shouldn't commit these into source control
+# these are the default directory names, adjust/add to fit your needs
+target/
+dbt_packages/
+logs/
+# end dbt Cloud content
+dbt_internal_packages/
+
+.DS_Store
+
+# dbt artifacts
+.user.yml
+dbt.log
+query_log.sql
+log_output/
+
+profiles.yml
+**/profiles.yml
+keys/
+credentials/

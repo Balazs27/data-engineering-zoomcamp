@@ -226,3 +226,16 @@ dbt_packages/
 logs/
 # end dbt Cloud content
 dbt_internal_packages/
+
+.DS_Store
+
+# dbt artifacts
+.user.yml
+dbt.log
+query_log.sql
+log_output/
+
+profiles.yml
+**/profiles.yml
+keys/
+credentials/
