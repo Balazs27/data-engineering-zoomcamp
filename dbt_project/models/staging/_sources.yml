@@ -1,9 +1,0 @@
-version: 2
-
-sources:
-  - name: raw_data
-    description: "Raw data sources for NYC taxi rides"
-    database: de-zoompcamp-learning # Project ID
-    schema: demo_dataset # Dataset Name
-    tables:
-      - name: green_tripdata_partitioned

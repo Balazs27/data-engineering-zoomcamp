@@ -1,0 +1,211 @@
+models:
+  - name: mart_trip_enriched
+    description: |
+      Denormalized taxi trip model combining trip facts with descriptive
+      vendor, payment type, pickup zone, and drop-off zone attributes.
+
+      Grain: One row per taxi trip.
+
+      This model is designed for analytics and reporting by providing
+      descriptive dimension values directly alongside trip measures.
+
+    config:
+      contract:
+        enforced: true
+
+    columns:
+      # Primary identifier
+      - name: trip_id
+        description: Unique identifier for the taxi trip. NOT TRUE
+        data_type: string
+        data_tests:
+          - not_null
+
+      # Vendor attributes
+      - name: vendor_id
+        description: Identifier of the taxi technology provider.
+        data_type: integer
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_vendor')
+                field: vendor_id
+
+      - name: vendor_name
+        description: Name of the taxi technology provider.
+        data_type: string
+
+      # Trip classification
+      - name: service_type
+        description: Type of taxi service, either green or yellow.
+        data_type: string
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['green', 'yellow']
+
+      - name: trip_type
+        description: |
+          Type of taxi trip. Typically 1 represents a street-hail trip
+          and 2 represents a dispatch trip.
+        data_type: integer
+
+      - name: rate_code_id
+        description: Final rate code applied to the trip.
+        data_type: integer
+
+      # Pickup location
+      - name: pickup_location_id
+        description: TLC Taxi Zone identifier where the trip started.
+        data_type: integer
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_zone')
+                field: location_id
+
+      - name: pickup_borough
+        description: Borough where the trip started.
+        data_type: string
+
+      - name: pickup_zone
+        description: TLC Taxi Zone name where the trip started.
+        data_type: string
+
+      - name: pickup_service_zone
+        description: TLC service zone associated with the pickup location.
+        data_type: string
+
+      # Drop-off location
+      - name: dropoff_location_id
+        description: TLC Taxi Zone identifier where the trip ended.
+        data_type: integer
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_zone')
+                field: location_id
+
+      - name: dropoff_borough
+        description: Borough where the trip ended.
+        data_type: string
+
+      - name: dropoff_zone
+        description: TLC Taxi Zone name where the trip ended.
+        data_type: string
+
+      - name: dropoff_service_zone
+        description: TLC service zone associated with the drop-off location.
+        data_type: string
+
+      # Payment attributes
+      - name: payment_type_id
+        description: Identifier representing the trip payment method.
+        data_type: integer
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_payment_type')
+                field: payment_type_id
+
+      - name: payment_type_description
+        description: Human-readable description of the trip payment method.
+        data_type: string
+
+      # Event timestamps
+      - name: pickup_datetime
+        description: Timestamp when the taxi meter was engaged.
+        data_type: timestamp
+        data_tests:
+          - not_null
+
+      - name: dropoff_datetime
+        description: Timestamp when the taxi meter was disengaged.
+        data_type: timestamp
+
+      - name: trip_duration_minutes
+        description: Duration of the trip in minutes.
+        data_type: bigint
+
+      # Trip measures
+      - name: passenger_count
+        description: Number of passengers recorded for the trip.
+        data_type: integer
+
+      - name: trip_distance
+        description: Trip distance in miles.
+        data_type: numeric(38, 9)
+
+      - name: fare_amount
+        description: Fare calculated based on time and distance.
+        data_type: numeric(38, 9)
+
+      - name: extra
+        description: Miscellaneous extras and surcharges.
+        data_type: numeric(38, 9)
+
+      - name: mta_tax
+        description: MTA tax amount charged for the trip.
+        data_type: numeric(38, 9)
+
+      - name: tip_amount
+        description: Tip amount, generally recorded for credit-card payments.
+        data_type: numeric(38, 9)
+
+      - name: tolls_amount
+        description: Total toll amount charged during the trip.
+        data_type: numeric(38, 9)
+
+      - name: ehail_fee
+        description: E-hail service fee charged for the trip.
+        data_type: numeric(38, 9)
+
+      - name: improvement_surcharge
+        description: Improvement surcharge applied to the trip.
+        data_type: numeric(38, 9)
+
+      - name: congestion_surcharge
+        description: Congestion surcharge applied to the trip.
+        data_type: numeric(38, 9)
+
+      - name: total_amount
+        description: Total amount charged to the passenger.
+        data_type: numeric(38, 9)
+        data_tests:
+          - not_null
+
+  - name: mart_monthly_zone_revenue
+    description: Monthly revenue aggregation by pickup zone and service type for business reporting
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - pickup_zone
+              - revenue_month
+              - service_type
+    columns:
+      - name: pickup_zone
+        description: Pickup zone where revenue was generated
+        data_tests:
+          - not_null
+      - name: revenue_month
+        description: Month for revenue aggregation
+        data_tests:
+          - not_null
+      - name: service_type
+        description: Service type (Green or Yellow)
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['green', 'yellow']
+      - name: revenue_monthly_total_amount
+        description: Monthly sum of total fares
+        data_tests:
+          - not_null
+      - name: total_monthly_trips
+        description: Count of trips in the month
+        data_tests:
+          - not_null
