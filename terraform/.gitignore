@@ -1,0 +1,22 @@
+keys/
+*.json
+
+.terraform/
+*.tfstate
+*.tfstate.*
+
+# Local variable values and saved plans
+*.tfvars
+*.tfvars.json
+*.tfplan
+*.plan
+
+# Terraform crash logs and local overrides
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+.DS_Store
