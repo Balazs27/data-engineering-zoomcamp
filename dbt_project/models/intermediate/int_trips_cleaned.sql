@@ -1,6 +1,5 @@
 -- Enrich and deduplicate trip data
 -- Demonstrates enrichment and surrogate key generation
--- Note: Data quality analysis available in analyses/trips_data_quality.sql
 
 with unioned as (
     

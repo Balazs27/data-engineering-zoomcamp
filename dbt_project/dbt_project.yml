@@ -24,6 +24,7 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
 
+# Project-level variables -->date range for dev environment sampling
 vars:
   limit_dev_data: true
   dev_start_date: '2019-01-01'
