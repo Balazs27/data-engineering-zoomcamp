@@ -204,7 +204,7 @@ dbt docs serve
 
 The surrounding modules show how data reaches this transformation layer:
 
-- [Terraform infrastructure](../terraform/terraform_quickstart_guide.md)
+- [Terraform infrastructure](../terraform/README.md)
 - [Mage orchestration and GCS ingestion](../workflow-orchestration-mage/README.md)
 - [BigQuery warehousing, partitioning, and clustering](../data-warehousing-big-query/README.md)
 - [Dockerized PostgreSQL ingestion foundations](../docker-postgres-pipeline/README.md)
