@@ -1,0 +1,15 @@
+.file_versions/
+.ssh_tunnel/
+.variables/
+.cache/
+.logs/
+logs/
+mage-ai.db
+mage_data/
+io_config.yaml
+**/__pycache__/
+*.py[cod]
+*.csv
+*.csv.gz
+*.parquet
+*.part

@@ -1,0 +1,34 @@
+# Local environment values
+.env
+
+# Credentials and secrets
+keys/
+*.json
+*.pem
+*.p12
+
+# Mage connection configuration (use the committed template)
+magic-zoomcamp/io_config.yaml
+
+# Mage runtime data and local history
+mage_data/
+magic-zoomcamp/.file_versions/
+magic-zoomcamp/.ssh_tunnel/
+magic-zoomcamp/.variables/
+magic-zoomcamp/.cache/
+magic-zoomcamp/.logs/
+magic-zoomcamp/logs/
+magic-zoomcamp/mage-ai.db
+
+# Python and editor artifacts
+**/__pycache__/
+*.py[cod]
+.DS_Store
+.idea/
+.vscode/
+
+# Local data outputs
+*.csv
+*.csv.gz
+*.parquet
+*.part

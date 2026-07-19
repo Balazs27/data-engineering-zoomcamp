@@ -1,0 +1,40 @@
+blocks:
+- configuration:
+    file_source:
+      path: data_loaders/load_yellow_taxi_january.py
+  downstream_blocks:
+  - clean_yellow_taxi_january
+  language: python
+  name: load_yellow_taxi_january
+  type: data_loader
+  upstream_blocks: []
+  uuid: load_yellow_taxi_january
+- configuration:
+    file_source:
+      path: transformers/clean_yellow_taxi_january.py
+  downstream_blocks:
+  - export_single_parquet
+  language: python
+  name: clean_yellow_taxi_january
+  type: transformer
+  upstream_blocks:
+  - load_yellow_taxi_january
+  uuid: clean_yellow_taxi_january
+- configuration:
+    file_source:
+      path: data_exporters/export_single_parquet.py
+  downstream_blocks: []
+  language: python
+  name: export_single_parquet
+  type: data_exporter
+  upstream_blocks:
+  - clean_yellow_taxi_january
+  uuid: export_single_parquet
+cache_block_output_in_memory: false
+callbacks: []
+conditionals: []
+name: Taxi single Parquet
+settings:
+  triggers: null
+type: python
+uuid: taxi_single_parquet

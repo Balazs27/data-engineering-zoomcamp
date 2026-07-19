@@ -1,0 +1,40 @@
+blocks:
+- configuration:
+    file_source:
+      path: data_loaders/load_yellow_taxi_2019.py
+  downstream_blocks:
+  - transform_yellow_taxi_2019
+  language: python
+  name: load_yellow_taxi_2019
+  type: data_loader
+  upstream_blocks: []
+  uuid: load_yellow_taxi_2019
+- configuration:
+    file_source:
+      path: transformers/transform_yellow_taxi_2019.py
+  downstream_blocks:
+  - export_yellow_taxi_2019_csv
+  language: python
+  name: transform_yellow_taxi_2019
+  type: transformer
+  upstream_blocks:
+  - load_yellow_taxi_2019
+  uuid: transform_yellow_taxi_2019
+- configuration:
+    file_source:
+      path: data_exporters/export_yellow_taxi_2019_csv.py
+  downstream_blocks: []
+  language: python
+  name: export_yellow_taxi_2019_csv
+  type: data_exporter
+  upstream_blocks:
+  - transform_yellow_taxi_2019
+  uuid: export_yellow_taxi_2019_csv
+cache_block_output_in_memory: false
+callbacks: []
+conditionals: []
+name: Yellow Taxi 2019 CSV batch
+settings:
+  triggers: null
+type: python
+uuid: yellow_taxi_2019_csv_batch

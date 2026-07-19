@@ -1,0 +1,44 @@
+services:
+  magic:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: mage start ${PROJECT_NAME}
+    env_file:
+      - ${MAGE_ENV_FILE:-.env}
+    environment:
+      USER_CODE_PATH: /home/src/${PROJECT_NAME}
+      GOOGLE_APPLICATION_CREDENTIALS: /home/src/credentials/service-account.json
+    ports:
+      - "6789:6789"
+    volumes:
+      - .:/home/src/
+      - ${GOOGLE_SERVICE_ACCOUNT_KEY_PATH}:/home/src/credentials/service-account.json:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: on-failure:5
+
+  postgres:
+    image: postgres:18
+    env_file:
+      - ${MAGE_ENV_FILE:-.env}
+    environment:
+      POSTGRES_DB: ${POSTGRES_DBNAME}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - mage_postgres_data:/var/lib/postgresql
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DBNAME}
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
+
+volumes:
+  mage_postgres_data:
