@@ -1,0 +1,23 @@
+# Pipeline code is published in the Mage module
+*.py
+
+# Credentials and local configuration
+keys/
+*.json
+*.pem
+*.p12
+.env
+.env.*
+
+# Local datasets and generated outputs
+*.csv
+*.csv.gz
+*.parquet
+
+# Private planning notes
+taxi_capstone.md
+
+# Runtime and OS artifacts
+__pycache__/
+*.py[cod]
+.DS_Store
