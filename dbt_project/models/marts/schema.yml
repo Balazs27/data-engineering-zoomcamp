@@ -1,0 +1,177 @@
+models:
+  - name: dim_vendor
+    description: |
+      Union of green and yellow taxi trip data with normalized schema
+        Grain: One row per vendor
+    columns:
+      - name: vendor_id
+        description: Unique vendor identifier
+        data_tests:
+          - unique
+          - not_null
+      - name: vendor_name
+        description: Company name of the vendor
+
+  - name: dim_zone
+    description: |
+      Taxi zone dimension table with location details
+      Grain: One row per taxi zone
+    columns:
+      - name: location_id
+        description: Unique identifier for each taxi zone
+        data_tests:
+          - unique
+          - not_null
+      - name: borough
+        description: NYC borough name
+      - name: zone
+        description: Specific zone name within the borough
+      - name: service_zone
+        description: Service zone classification
+
+  - name: dim_payment_type
+    description: |
+      Union of green and yellow taxi trip data with normalized schema
+      Grain: One row per payment type
+    columns:
+      - name: payment_type_id
+        description: Unique payment type identifier
+        data_tests:
+          - unique
+          - not_null
+      - name: payment_type_description
+        description: Description of different payment types
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['Unknown', 'Credit card', 'Cash', 'No charge', 'Dispute', 'Voided trip']
+
+
+  - name: fact_trip
+    description: |
+      Fact table containing taxi trips and their associated payment details.
+
+      Grain: One row per taxi trip.
+
+      Contains dimension keys, event timestamps, low-cardinality trip
+      attributes, and numeric trip measures.
+
+    config:
+      contract:
+        enforced: true
+
+    columns:
+      - name: trip_id
+        description: Unique (not true) trip identifier derived from multiple source columns.
+        data_type: string
+        data_tests:
+          - not_null
+
+      - name: vendor_id
+        description: Identifier of the taxi technology provider.
+        data_type: integer
+        data_tests:
+          - not_null
+
+      - name: payment_type_id
+        description: Identifier representing the trip payment method.
+        data_type: integer
+
+      - name: pickup_location_id
+        description: TLC Taxi Zone where the trip started.
+        data_type: integer
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_zones')
+                field: location_id
+
+      - name: dropoff_location_id
+        description: TLC Taxi Zone where the trip ended.
+        data_type: integer
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_zones')
+                field: location_id
+
+      - name: rate_code_id
+        description: Final rate code applied to the trip.
+        data_type: integer
+
+      - name: service_type
+        description: Type of taxi service, either green or yellow.
+        data_type: string
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['green', 'yellow']
+          - not_null
+
+      - name: store_and_fwd_flag
+        description: Indicates whether the trip record was stored in vehicle memory before being forwarded.
+        data_type: string
+
+      - name: trip_type
+        description: Trip type, where 1 represents street-hail and 2 represents dispatch.
+        data_type: integer
+
+      - name: pickup_datetime
+        description: Timestamp when the taxi meter was engaged.
+        data_type: timestamp
+        data_tests:
+          - not_null
+
+      - name: dropoff_datetime
+        description: Timestamp when the taxi meter was disengaged.
+        data_type: timestamp
+
+      - name: trip_duration_minutes
+        description: Trip duration in minutes, calculated from pickup and drop-off timestamps.
+        data_type: bigint
+
+      - name: passenger_count
+        description: Number of passengers recorded for the trip.
+        data_type: integer
+
+      - name: trip_distance
+        description: Trip distance in miles.
+        data_type: numeric(38, 9)
+
+      - name: fare_amount
+        description: Time-and-distance fare amount.
+        data_type: numeric(38, 9)
+
+      - name: extra
+        description: Miscellaneous extras and surcharges.
+        data_type: numeric(38, 9)
+
+      - name: mta_tax
+        description: MTA tax amount.
+        data_type: numeric(38, 9)
+
+      - name: tip_amount
+        description: Tip amount, generally recorded only for credit-card payments.
+        data_type: numeric(38, 9)
+
+      - name: tolls_amount
+        description: Total toll amount paid during the trip.
+        data_type: numeric(38, 9)
+
+      - name: ehail_fee
+        description: E-hail service fee.
+        data_type: numeric(38, 9)
+
+      - name: improvement_surcharge
+        description: Improvement surcharge applied to the trip.
+        data_type: numeric(38, 9)
+
+      - name: congestion_surcharge
+        description: Congestion surcharge applied to the trip.
+        data_type: numeric(38, 9)
+
+      - name: total_amount
+        description: Total amount charged for the trip.
+        data_type: numeric(38, 9)
+        data_tests:
+          - not_null
